@@ -1,0 +1,169 @@
+#Must Do Coding Questions for Companies like Amazon, Microsoft, Adobe
+
+#Arrays
+
+Node* binaryTreeToCDLL(Node *root){
+	
+	Node *head = NULL, Node *prev = NULL;
+
+	inorder(root,&head,&prev);
+
+	head->left = prev;
+	prev->right = head;
+
+	return head;
+
+}
+
+void inorder(Node* root, Node **head, Node **prev){
+	
+	if(root==NULL) return;
+
+	inorder(root->left,head,prev);
+
+	if(*prev==NULL)
+		*head = root;
+	else{
+		root->left = prev;
+		(*prev)->right = root;
+	}
+
+	*prev = root;
+
+	inorder(root->right,head,prev)
+
+}
+
+
+
+vector<int> postOrder(TreeNode* root){
+	
+	stack<TreeNode*> stk;
+	vector<int> res;
+	TreeNode *prev;
+
+	do{
+
+		while(root){
+			stk.push(root);
+			root = root->left;
+		}
+
+		while(!stk.empty() && root==NULL){
+
+			root = stk.top();
+
+			if(root->right==NULL || root->right==prev){
+				res.push_back(root->val);
+				stk.pop();
+				prev = root;
+				root = NULL;
+			}
+			else
+				root = root->right;
+		}
+
+	}while(!stk.empty());
+}
+
+vector<int> preOrder(TreeNode* root){
+	
+	vector<int> res;
+
+	while(root){
+
+		if(root->left == NULL){
+			root.push_back(root->val);
+			root = root->right;
+		}
+		else{
+
+			Node *temp = root->left;
+			while(temp->right && temp->right!=root)
+				temp = temp->right;
+
+			if(temp->right == root){
+				temp->right = NULL;
+				root = root->right;
+			}
+			else{
+				temp->right = root;
+				res.push_back(root->val);
+				root = root->left;
+			}
+		}
+
+	}
+
+}
+
+class Solution{
+	vector<int> diameter;
+
+	vector<int> height(TreeNode *node){
+
+		if(node==NULL) return {};
+
+		vector<int> left = height(node->left);
+		vector<int> right = height(node->right);
+
+		if(left.size()+right.size()+1 > diameter.size()){
+			diameter.resize(left.size()+right.size()+1);
+			int i=0;
+			for(;i<left.size();i++)
+				diameter[i] = left[i];
+
+			diameter[i++] = node->val;
+			
+			for(int j=0;j<right.size();j++)
+				diameter[i++] = right[j];
+
+		}
+
+		if(left.size() > right.size()) {
+			left.push_back(node->val);
+			return left;
+		}
+
+		right.push_back(node->val);
+		return right;
+	}
+
+	vector<int> findDiameter(TreeNode* root){
+		diameter = {};
+		height(root);
+		return diameter;
+	}
+	
+};
+
+
+int noOfWays(vector<int> trees){
+
+	if(tree.size()<=2) return tree.size();
+	
+	/*
+		11 10 20 30 40
+		10 20 30 40 39
+		10 20 30 40 10
+		10 20 15 30 40 
+		10 20 35 30 40
+	*/
+
+	int index = -1;
+	for(int i=0;i<trees.size()-1;i++)
+		if(arr[i]>arr[i+1])
+			if(index==-1)
+				index = i;
+			else
+				return 0;
+
+	if(index==-1)
+		return trees.size();
+
+	if((index == trees.size()-1 && arr[index+1] >= arr[index-1]) || 
+	   (index>=0 && index+2<trees.size() && arr[index] <= arr[index+2]))
+	   return 2;
+
+	return 1;
+}

@@ -32,6 +32,29 @@ int findMinLength(int arr[], int n, int elt){
     return minLength;
 }
 
+class Solution {
+public:
+    int minSubArrayLen(int elt, vector<int>& arr) {
+        int n = arr.size();
+        
+        int minLength = n + 1, sum = 0;
+        int start = 0, end = 0;
+
+        while(end < n){
+            
+            sum += arr[end++];
+            
+            while(sum >= elt && start < end){
+                minLength = min(minLength, end-start);
+                sum = sum - arr[start++];
+            }    
+
+        }
+        
+        return (minLength==n+1) ? 0 : minLength;
+    }
+};
+
 int main() {
 	//code
 	int T;
