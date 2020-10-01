@@ -1,2 +1,2 @@
 # Preparation
-Tech Interview Preparation @ DUCS
+Interview Preparation @ DUCS
